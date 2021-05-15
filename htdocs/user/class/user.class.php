@@ -2206,8 +2206,13 @@ class User extends CommonObject
 				$this->newgroupid = $group; // deprecated. Remove this.
 				$this->context = array('audit'=>$langs->trans("UserSetInGroup"), 'newgroupid'=>$group);
 
-				// Call trigger
+				// Call triggers
 				$result = $this->call_trigger('USER_MODIFY', $user);
+				if ($result < 0) { $error++; }
+
+				$groupobject = new Usergroup($this->db);
+				$groupobject->fetch($group);
+				$result = $groupobject->call_trigger('USERGROUP_MODIFY', $user);
 				if ($result < 0) { $error++; }
 				// End call triggers
 			}
@@ -2263,8 +2268,13 @@ class User extends CommonObject
 				$this->oldgroupid = $group; // deprecated. Remove this.
 				$this->context = array('audit'=>$langs->trans("UserRemovedFromGroup"), 'oldgroupid'=>$group);
 
-				// Call trigger
+				// Call triggers
 				$result = $this->call_trigger('USER_MODIFY', $user);
+				if ($result < 0) { $error++; }
+
+				$groupobject = new Usergroup($this->db);
+				$groupobject->fetch($group);
+				$result = $groupobject->call_trigger('USERGROUP_MODIFY', $user);
 				if ($result < 0) { $error++; }
 				// End call triggers
 			}
